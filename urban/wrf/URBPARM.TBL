@@ -21,7 +21,7 @@ Number of urban categories: 3
 # ZR:  Roof level (building height)  [ m ]
 #      (sf_urban_physics=1)
 
-ZR: 5.0,  6.4,  10.0
+ZR: 5.0,  7.5,  10.0
 
 #
 # SIGMA_ZED:  Standard Deviation of roof height  [ m ]
@@ -33,14 +33,14 @@ SIGMA_ZED: 1.0,  3.0,  4.0
 # ROOF_WIDTH:  Roof (i.e., building) width  [ m ]
 #      (sf_urban_physics=1)
 
-ROOF_WIDTH: 8.3, 12.2, 10.0
+ROOF_WIDTH: 8.3, 9.4, 10.0
 
 #
 # ROAD_WIDTH:  road width  [ m ]
 #      (sf_urban_physics=1)
 #
 
-ROAD_WIDTH: 8.3, 3, 10.0
+ROAD_WIDTH: 8.3, 9.4, 10.0
 
 #
 # AH:  Anthropogenic heat [ W m{-2} ]
@@ -227,12 +227,6 @@ FGR: 0.0
 
 DZGR:  0.05 0.10 0.15 0.20
 
-#
-# FVG: Fraction of vegetated ground in the urban canyon (0-1)
-#      (sf_urban_physics=1)
-#
-
-FVG: 0.28
 
 #
 # TREEOPTION [ 0: No urban trees, 1: Enable urban trees ]
@@ -240,6 +234,13 @@ FVG: 0.28
 #
 
 TREEOPTION: 1
+
+#
+# FVG: Fraction of vegetated ground in the urban canyon (0-1)
+#      (sf_urban_physics=1)
+#
+
+FVG: 0.3
 
 #
 # RTREE: Tree crown radius [ m ]
@@ -255,9 +256,9 @@ TREEOPTION: 1
 #      (sf_urban_physics=1, TREEOPTION=1)
 #
 
-RTREE: 1, 1, 2.0
-HTREE: 3.0, 3.2, 4.2
-DTREE: 4.15, 1.5, 5.0
+RTREE: 1, 1.5, 2.0
+HTREE: 2.5, 3.5, 4.0
+DTREE: 4.15, 4.7, 5.0
 Z0VG: 0.01, 0.01, 0.01
 Z0HVG: 0.001, 0.001, 0.001
 CAPVG: 1.3E6, 1.3E6, 1.3E6
@@ -270,7 +271,7 @@ EPST: 0.9, 0.9, 0.9
 #      (sf_urban_physics=1,2,3)
 #
 
-FRC_URB: 0.5, 1, 0.95
+FRC_URB: 0.5, 0.9, 0.95
 
 #
 # CAPR:  Heat capacity of roof  [ J m{-3} K{-1} ]

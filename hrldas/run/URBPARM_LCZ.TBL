@@ -227,18 +227,18 @@ FGR: 0.0
 DZGR:  0.05 0.10 0.15 0.20
 
 #
-# FVG: Fraction of vegetated ground in the urban canyon (0-1)
-#      (sf_urban_physics=1)
-#
-
-FVG: 0.1
-
-#
 # TREEOPTION [ 0: No urban trees, 1: Enable urban trees ]
 #      (sf_urban_physics=1)
 #
 
 TREEOPTION: 1
+
+#
+# FVG: Fraction of vegetated ground in the urban canyon (0-1)
+#      (sf_urban_physics=1)
+#
+
+FVG: 0.3
 
 #
 # RTREE: Tree crown radius [ m ]
@@ -256,9 +256,9 @@ TREEOPTION: 1
 
 37.5, 17.5, 6.5, 37.5, 17.5, 6.5, 3., 6.5, 6.5, 10., 10.
 
-RTREE: 1.5, 1., 0.8, 1.5, 1.1, 0.8, 0.3, 0.8, 0.8, 1.1, 1.1
-HTREE: 5.0, 4.2, 2., 5., 3.5, 1.9, 0.5, 1.9, 1.9, 3.5, 3.7
-DTREE: 10., 7., 2.6, 25., 17.5, 6.5, 1.66, 16.3, 21.6, 14.3, 50. 
+RTREE: 1.8, 1.5, 1, 1.8, 1.5, 1, 0.7, 1, 1, 1.3, 1.3
+HTREE: 4.2, 4.0, 2, 4.2, 4.0, 2, 1.2, 2, 2, 3, 3
+DTREE: 10., 7., 2.6, 25., 17.5, 6.5, 1.665, 16.25, 21.65, 14.3, 50. 
 Z0VG: 0.01, 0.01, 0.01,0.01, 0.01, 0.01,0.01, 0.01, 0.01,0.01, 0.01
 Z0HVG: 0.001, 0.001, 0.001,0.001, 0.001, 0.001,0.001, 0.001, 0.001,0.001, 0.001
 CAPVG: 1.3E6, 1.3E6, 1.3E6,1.3E6, 1.3E6, 1.3E6,1.3E6, 1.3E6, 1.3E6,1.3E6, 1.3E6
