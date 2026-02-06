@@ -367,7 +367,6 @@ use Machine, only : kind_noahmp
    !-------------------------------------------------------------------------------
    REAL(kind=kind_noahmp) :: TVGP, TTP ! Temperature at Pervious Time Step
    REAL(kind=kind_noahmp) :: ALBGE     ! Effective Surface Albedo of Ground 
-   REAL(kind=kind_noahmp) :: ALBVG     ! Surface Albedo of Vegetated Ground
    REAL(kind=kind_noahmp) :: XI        ! Tree Shadow Related Variable
    REAL(kind=kind_noahmp) :: ANGLE, TAN1, TAN2               ! Reference Angles Between Tree and Roof 
    REAL(kind=kind_noahmp) :: SDT       ! Direct Short Wave Radiation incident on Tree
@@ -431,6 +430,7 @@ use Machine, only : kind_noahmp
    !----------- fixed universe parameters for urban vegetation  ---------------
    INTEGER, PARAMETER :: NVG   = 4         ! Total Layer of Vegetated Ground
    REAL(kind=kind_noahmp), PARAMETER    :: ALBT  = 0.2       ! Leaf Surface Albedo
+   REAL(kind=kind_noahmp), PARAMETER    :: ALBVG = 0.2       ! Vegetated ground albedo
    REAL(kind=kind_noahmp), PARAMETER    :: DLEAF = 0.1       ! Unit = m
    REAL(kind=kind_noahmp), PARAMETER    :: TREF  = 298.0     ! Unit = K
    REAL(kind=kind_noahmp), PARAMETER    :: EREF  = 3167.0    ! Unit = K
