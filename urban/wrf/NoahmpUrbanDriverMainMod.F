@@ -102,8 +102,6 @@ contains
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  ZNT       ! combined z0 sent to coupled model
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  TSK       ! surface radiative temperature [K]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  HFX       ! sensible heat flux [W m-2]
-    REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  USNET     ! urban net shortwave radiation [W m-2]
-    REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  ULNET     ! urban net longwave radiation [W m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  QFX       ! latent heat flux [kg s-1 m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  LH        ! latent heat flux [W m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  GRDFLX    ! ground/snow heat flux [W m-2]
