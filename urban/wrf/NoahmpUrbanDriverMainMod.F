@@ -550,6 +550,7 @@ ILOOP : DO I = its, ite
            XXXR_URB,   XXXB_URB,   XXXG_URB,   XXXC_URB,                               & ! H
              TS_URB,     QS_URB,     SH_URB,     LH_URB, LH_KINEMATIC_URB,             & ! O
              SW_URB,    ALB_URB,     LW_URB,      G_URB,   RN_URB, PSIM_URB, PSIH_URB, & ! O
+          USNET_URB,  ULNET_URB,                                                       &
          GZ1OZ0_URB,                                                                   & ! O
             CMR_URB,    CHR_URB,    CMC_URB,    CHC_URB,                               &
             U10_URB,    V10_URB,    TH2_URB,     Q2_URB,                               & ! O
