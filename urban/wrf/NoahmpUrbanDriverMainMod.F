@@ -15,7 +15,7 @@ contains
                              SWDDIR,         SWDDIF,       LAI_TREE,    LAI_VEG,            & ! added by yuqi
                                 GLW,          P8W3D,         RAINBL,       DZ8W,      ZNT,  & ! IN : Forcing
                                 TSK,            HFX,            QFX,         LH,   GRDFLX,  & ! IN/OUT : LSM 
-                              USNET,          ULNET,                                        % ! added by yuqi huang
+                              USNET,          ULNET,                                        & ! added by yuqi huang
                              ALBEDO,          EMISS,           QSFC,                        & ! IN/OUT : LSM 
                             ids,ide,        jds,jde,        kds,kde,                        &
                             ims,ime,        jms,jme,        kms,kme,                        &
