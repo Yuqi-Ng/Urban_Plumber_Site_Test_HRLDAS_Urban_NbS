@@ -1062,6 +1062,7 @@ contains
                             NoahmpIO%SWDDIR, NoahmpIO%SWDDIF, NoahmpIO%LAI_TREE, NoahmpIO%LAI_VEG,              & ! added by yuqi
                             NoahmpIO%GLW, NoahmpIO%P8W, NoahmpIO%RAINBL, NoahmpIO%DZ8W, NoahmpIO%ZNT,           & ! IN : Forcing
                             NoahmpIO%TSK, NoahmpIO%HFX, NoahmpIO%QFX, NoahmpIO%LH, NoahmpIO%GRDFLX,             & ! IN/OUT : LSM 
+                            NoahmpIO%USNET, NoahmpIO%ULNET,                                                     & ! ADDED BY YUQI HUANG
                             NoahmpIO%ALBEDO, NoahmpIO%EMISS, NoahmpIO%QSFC,                                     & ! IN/OUT : LSM 
                             NoahmpIO%ids, NoahmpIO%ide, NoahmpIO%jds, NoahmpIO%jde, NoahmpIO%kds, NoahmpIO%kde, &
                             NoahmpIO%ims, NoahmpIO%ime, NoahmpIO%jms, NoahmpIO%jme, NoahmpIO%kms, NoahmpIO%kme, &
@@ -1191,6 +1192,8 @@ contains
               call add_to_output(NoahmpIO%GRDFLX     , "GRDFLX"  , "Heat flux into the soil"              , "W/m2"                  )
               call add_to_output(NoahmpIO%HFX        , "HFX"     , "Total sensible heat to atmosphere"    , "W/m2"                  )
               call add_to_output(NoahmpIO%LH         , "LH"      , "Total latent heat to atmosphere"      , "W/m2"                  )
+              call add_to_output(NoahmpIO%USNET      , "USNET"   , "Urban grid net shortwave radiation"   , "W/m2"                  )
+              call add_to_output(NoahmpIO%ULNET      , "ULNET"   , "Urban grid net longwave radiation"    , "W/m2"                  )
               call add_to_output(NoahmpIO%ECANXY     , "ECAN"    , "Canopy water evaporation rate"        , "mm/s"                  )
               call add_to_output(NoahmpIO%ETRANXY    , "ETRAN"   , "Transpiration rate"                   , "mm/s"                  )
               call add_to_output(NoahmpIO%EDIRXY     , "EDIR"    , "Direct from soil evaporation rate"    , "mm/s"                  )

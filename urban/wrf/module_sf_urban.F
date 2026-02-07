@@ -108,13 +108,13 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: RW_M_TBL        ! Road width in meter																		   
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: HTREE_TBL       ! Tree crown center height [normalized]
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: DTREE_TBL       ! Tree crown center distance from wall (half canyon width currently) [normalized]
-   !REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: LAI_TREE_TBL   ! Tree leaf area index     modified by yuqi
-   !REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: LAI_VEG_TBL    ! Vegetated ground leaf area index
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: Z0VG_TBL        ! Roughness length for momentum of vegetated ground
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: Z0HVG_TBL       ! Roughness length for heat of vegetated ground
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: CAPVG_TBL       ! Heat capacity of vegetated ground
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: EPSVG_TBL       ! Emissivity of vegetated ground
    REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: EPST_TBL        ! Emissivity of tree canopy
+   REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: ALBVG_TBL       ! Emissivity of vegetated ground
+   REAL(kind=kind_noahmp), ALLOCATABLE, DIMENSION(:) :: ALBT_TBL        ! Emissivity of tree canopy
 !===end urban nature-based solutions processes===
 
    CHARACTER (LEN=256) , PRIVATE   :: mesg
@@ -325,6 +325,7 @@ use Machine, only : kind_noahmp
                     XXXR, XXXB, XXXG, XXXC,                           & ! H
                     TS,QS,SH,LH,LH_KINEMATIC,                         & ! O
                     SW,ALB,LW,G,RN,PSIM,PSIH,                         & ! O
+                    USNET, SLNET,                                     & ! O  ! s=added by yuqi huang
                     GZ1OZ0,                                           & ! O
                     CMR_URB,CHR_URB,CMC_URB,CHC_URB,                  & ! I/O
                     U10,V10,TH2,Q2,UST,mh_urb,stdh_urb,lf_urb,        & ! O 
@@ -429,8 +430,6 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp) :: CMCGP     ! Canopy Intercepted Water on Vegetated Ground
    !----------- fixed universe parameters for urban vegetation  ---------------
    INTEGER, PARAMETER :: NVG   = 4         ! Total Layer of Vegetated Ground
-   REAL(kind=kind_noahmp), PARAMETER    :: ALBT  = 0.2       ! Leaf Surface Albedo
-   REAL(kind=kind_noahmp), PARAMETER    :: ALBVG = 0.2       ! Vegetated ground albedo
    REAL(kind=kind_noahmp), PARAMETER    :: DLEAF = 0.1       ! Unit = m
    REAL(kind=kind_noahmp), PARAMETER    :: TREF  = 298.0     ! Unit = K
    REAL(kind=kind_noahmp), PARAMETER    :: EREF  = 3167.0    ! Unit = K
@@ -447,8 +446,8 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp)                    :: RW_M          ! road width in meters																	   
    REAL(kind=kind_noahmp)                    :: DTREE         ! Distance of Tree Crown Center From Wall (RW/2)
    REAL(kind=kind_noahmp)                    :: HTREE         ! Height of Tree Crown Center
-   !REAL(kind=kind_noahmp)                    :: LAI_VEG       ! Vegetated Ground Leaf Areal Index                   ! modified by yuqi
-   !REAL(kind=kind_noahmp)                    :: LAI_TREE      ! Leaf Area Index of Trees (Could be an input)
+   REAL(kind=kind_noahmp)                    :: ALBT          ! Leaf Surface Albedo
+   REAL(kind=kind_noahmp)                    :: ALBVG         ! Vegetated ground albedo
 ! -------------------------------------End Urban Vegetation Variable Define-----------------------------------------------------------------------------------------------------
 !-------------------------------------------------------------------------------
 ! C: configuration variables
@@ -501,7 +500,6 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp), INTENT(INOUT) :: CMC_URB
    REAL(kind=kind_noahmp), INTENT(INOUT) :: CHC_URB
    REAL(kind=kind_noahmp), INTENT(INOUT) :: ZNT  ! roughness length                       [m]    ! modified by danli
-
    REAL(kind=kind_noahmp), INTENT(IN)    :: LAI_VEG       ! Vegetated Ground Leaf Areal Index            ! modified by yuqi
    REAL(kind=kind_noahmp), INTENT(IN)    :: LAI_TREE      ! Leaf Area Index of Trees (Could be an input)
 !-------------------------------------------------------------------------------
@@ -527,6 +525,8 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp), INTENT(OUT) :: LH_KINEMATIC ! latent heat, kinetic     [kg/m/m/s]
    REAL(kind=kind_noahmp), INTENT(OUT) :: SW     ! upward short wave radiation flux [W/m/m]
    REAL(kind=kind_noahmp), INTENT(OUT) :: ALB    ! time-varying albedo            [fraction]
+   REAL(kind=kind_noahmp), INTENT(OUT) :: USNET  ! urabn net short wave radiation flux          [W/m/m]  ! added by yuqi huang
+   REAL(kind=kind_noahmp), INTENT(OUT) :: ULNET  ! urban net long wave radiation flux           [W/m/m]
    REAL(kind=kind_noahmp), INTENT(OUT) :: LW     ! upward long wave radiation flux  [W/m/m]
    REAL(kind=kind_noahmp), INTENT(OUT) :: G      ! heat flux into the ground        [W/m/m]
    REAL(kind=kind_noahmp), INTENT(OUT) :: RN     ! net radition                     [W/m/m]
@@ -622,7 +622,7 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp) :: SX, SD, SQ, RX
    REAL(kind=kind_noahmp) :: UR, ZC, XLB, BB
    REAL(kind=kind_noahmp) :: Z, RIBB, RIBG, RIBC, BHR, BHB, BHG, BHC
-   REAL(kind=kind_noahmp) :: TSC, LNET, SNET, FLXUV, THG, FLXTH, FLXHUM, FLXG
+   REAL(kind=kind_noahmp) :: TSC, FLXUV, THG, FLXTH, FLXHUM, FLXG       ! added by yuqi huang
    REAL(kind=kind_noahmp) :: W, VFGS, VFGW, VFWG, VFWS, VFWW
    REAL(kind=kind_noahmp) :: HOUI1, HOUI2, HOUI3, HOUI4, HOUI5, HOUI6, HOUI7, HOUI8
    REAL(kind=kind_noahmp) :: SLX, SLX1, SLX2, SLX3, SLX4, SLX5, SLX6, SLX7, SLX8
@@ -736,7 +736,7 @@ use Machine, only : kind_noahmp
                    AH,CAPR,CAPB,CAPG,AKSR,AKSB,AKSG,ALBR,ALBB,    &
                    ALBG,EPSR,EPSB,EPSG,Z0R,Z0B,Z0G,Z0HB,Z0HG,     &
                    BETR,BETB,BETG,TRLEND,TBLEND,TGLEND,           &
-                   RTREE,RTREE_M,RW_M,HTREE,DTREE,                &        ! modified by yuqi comment out LAI_TREE,LAI_VEG
+                   RTREE,RTREE_M,RW_M,HTREE,DTREE,ALBVG,ALBT      &        ! modified by yuqi comment out LAI_TREE,LAI_VEG
                    Z0VG,Z0HVG,CAPVG,EPSVG,EPST,FVG,               &        ! added by yuqi																						  
 !for BEP
                    NUMDIR, STREET_DIRECTION, STREET_WIDTH,        & 
@@ -2269,6 +2269,8 @@ ENDIF
    TST = -FLXTH/UST               ! T* [K]
    QST = -FLXHUM/UST              ! q* [-]
 
+   USNET = SNET*697.7*60.         ! urban net shortwave radiation added by yuqi huang  [W/m/m]
+   ULNET = LNET*697.7*60.         ! urban net shortwave radiation added by yuqi huang  [W/m/m]
 !------------------------------------------------------
 !  diagnostic GRID AVERAGED  PSIM  PSIH  TS QS --> WRF
 !------------------------------------------------------
@@ -2692,7 +2694,7 @@ ENDIF
                          CAPR,CAPB,CAPG,AKSR,AKSB,AKSG,ALBR,ALBB,ALBG, & ! out
                          EPSR,EPSB,EPSG,Z0R,Z0B,Z0G,Z0HB,Z0HG,         & ! out
                          BETR,BETB,BETG,TRLEND,TBLEND,TGLEND,          & ! out
-                         RTREE,RTREE_M,RW_M,HTREE,DTREE,               & ! out   ! modified by yuqi   commented LAI_TREE,LAI_VEG
+                         RTREE,RTREE_M,RW_M,HTREE,DTREE,ALBVG,ALBT,    & ! out   ! modified by yuqi   commented LAI_TREE,LAI_VEG
                          Z0VG,Z0HVG,CAPVG,EPSVG,EPST,FVG,                   & ! out   ! added by yuqi																								
 !for BEP
                          NUMDIR, STREET_DIRECTION, STREET_WIDTH,       & ! out
@@ -2709,7 +2711,7 @@ ENDIF
                            SIGMA_ZED,                                    &
                            EPSR,EPSB,EPSG,Z0R,Z0B,Z0G,Z0HB,Z0HG,         &
                            BETR,BETB,BETG,TRLEND,TBLEND,TGLEND,RTREE,RTREE_M,RW_M,HTREE,&
-                           DTREE,Z0VG,Z0HVG,CAPVG,EPSVG,EPST,FVG   ! modified by yuqi		commented LAI_TREE,LAI_VEG																					   
+                           DTREE,Z0VG,Z0HVG,CAPVG,EPSVG,EPST,FVG,ALBVG,ALBT   ! modified by yuqi		commented LAI_TREE,LAI_VEG																					   
    REAL(kind=kind_noahmp), INTENT(OUT)    :: AKANDA_URBAN
 !for BEP
    INTEGER,                     INTENT(OUT) :: NUMDIR
@@ -2766,8 +2768,8 @@ ENDIF
    RW_M   = RW_M_TBL(UTYPE)
    HTREE=   HTREE_TBL(UTYPE)
    DTREE=   DTREE_TBL(UTYPE)
-   ! LAI_TREE=LAI_TREE_TBL(UTYPE)  ! modified by yuqi
-   ! LAI_VEG= LAI_VEG_TBL(UTYPE)
+   ALBVG = ALBVG_TBL(UTYPE)  ! modified by yuqi
+   ALBT  = ALBT_TBL(UTYPE)
    Z0VG = Z0VG_TBL(UTYPE)
    Z0HVG= Z0HVG_TBL(UTYPE)
    CAPVG= CAPVG_TBL(UTYPE)
@@ -2982,10 +2984,10 @@ ENDIF
             if(allocate_status /= 0) FATAL_ERROR('Error allocating HTREE_TBL in urban_param_init')
             ALLOCATE( DTREE_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating DTREE_TBL in urban_param_init')
-            !ALLOCATE( LAI_TREE_TBL(ICATE), stat=allocate_status )                                                     ! modified by yuqi
-            !if(allocate_status /= 0) FATAL_ERROR('Error allocating LAI_TREE_TBL in urban_param_init')
-            !ALLOCATE( LAI_VEG_TBL(ICATE), stat=allocate_status )
-            !if(allocate_status /= 0) FATAL_ERROR('Error allocating LAI_VEG_TBL in urban_param_init')
+            ALLOCATE( ALBVG_TBL(ICATE), stat=allocate_status )                                                     ! modified by yuqi
+            if(allocate_status /= 0) FATAL_ERROR('Error allocating ALBVG_TBL in urban_param_init')
+            ALLOCATE( ALBT_TBL(ICATE), stat=allocate_status )
+            if(allocate_status /= 0) FATAL_ERROR('Error allocating ALBT_TBL in urban_param_init')
             ALLOCATE( Z0VG_TBL(ICATE), stat=allocate_status )
             if(allocate_status /= 0) FATAL_ERROR('Error allocating Z0VG_TBL in urban_param_init')
             ALLOCATE( Z0HVG_TBL(ICATE), stat=allocate_status )
@@ -3181,10 +3183,10 @@ ENDIF
          read(string(indx+1:),*) htree_tbl(1:icate)
       else if (name == "DTREE") then
          read(string(indx+1:),*) dtree_tbl(1:icate)
-      !else if (name == "LAI_TREE") then                           ! modified by yuqi
-      !   read(string(indx+1:),*) lai_tree_tbl(1:icate) 
-      !else if (name == "LAI_VEG") then
-      !   read(string(indx+1:),*) lai_veg_tbl(1:icate) 
+      else if (name == "ALBVG_TREE") then                           ! modified by yuqi
+         read(string(indx+1:),*) albvg_tbl(1:icate) 
+      else if (name == "ALBT") then
+         read(string(indx+1:),*) albt_tbl(1:icate) 
       else if (name == "Z0VG") then
          read(string(indx+1:),*) z0vg_tbl(1:icate) 
       else if (name == "Z0HVG") then

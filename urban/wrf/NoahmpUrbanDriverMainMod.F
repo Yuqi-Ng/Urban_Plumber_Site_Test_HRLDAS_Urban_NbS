@@ -15,6 +15,7 @@ contains
                              SWDDIR,         SWDDIF,       LAI_TREE,    LAI_VEG,            & ! added by yuqi
                                 GLW,          P8W3D,         RAINBL,       DZ8W,      ZNT,  & ! IN : Forcing
                                 TSK,            HFX,            QFX,         LH,   GRDFLX,  & ! IN/OUT : LSM 
+                              USNET,          ULNET,                                        % ! added by yuqi huang
                              ALBEDO,          EMISS,           QSFC,                        & ! IN/OUT : LSM 
                             ids,ide,        jds,jde,        kds,kde,                        &
                             ims,ime,        jms,jme,        kms,kme,                        &
@@ -101,6 +102,8 @@ contains
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  ZNT       ! combined z0 sent to coupled model
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  TSK       ! surface radiative temperature [K]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  HFX       ! sensible heat flux [W m-2]
+    REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  USNET     ! urban net shortwave radiation [W m-2]
+    REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  ULNET     ! urban net longwave radiation [W m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  QFX       ! latent heat flux [kg s-1 m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  LH        ! latent heat flux [W m-2]
     REAL(kind=kind_noahmp),    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  GRDFLX    ! ground/snow heat flux [W m-2]
@@ -384,6 +387,8 @@ contains
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: RL_UP_URB
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: RS_ABS_URB
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: GRDFLX_URB
+     REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: USNET_URB, USNET_RURAL       ! added by yuqi huang
+     REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: ULNET_URB, ULNET_RURAL
 
      REAL(kind=kind_noahmp) :: SIGMA_SB,RL_UP_RURAL,RL_UP_TOT,RS_ABS_TOT,UMOM,VMOM
      REAL(kind=kind_noahmp) :: r1,r2,r3
@@ -397,6 +402,8 @@ contains
     DO I=ITS,ITE
       HFX_RURAL(I,J)                = HFX(I,J)
       QFX_RURAL(I,J)                = QFX(I,J)
+      USNET_RURAL(I,J)              = USNET(I,J)  ! ADDED BY YUQI HUANG
+      ULNET_RURAL(I,J)              = ULNET(I,J)
       GRDFLX_RURAL(I,J)             = GRDFLX(I,J)
       EMISS_RURAL(I,J)              = EMISS(I,J)
       TSK_RURAL(I,J)                = TSK(I,J)
@@ -558,6 +565,8 @@ ILOOP : DO I = its, ite
 
     ALBEDO(I,J)   = FRC_URB2D(I,J) * ALB_URB + (1-FRC_URB2D(I,J)) * ALBEDO(I,J)        ![-]      
     HFX(I,J)      = FRC_URB2D(I,J) * SH_URB  + (1-FRC_URB2D(I,J)) * HFX(I,J)           ![W/m/m] 
+    USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * USNET(I,J)           ![W/m/m]  ADDED BY YUQI HUANG
+    ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * ULNET(I,J)           ![W/m/m] 
     QFX(I,J)      = FRC_URB2D(I,J) * LH_KINEMATIC_URB &
                        + (1-FRC_URB2D(I,J))* QFX(I,J)                                  ![kg/m/m/s] 
     LH(I,J)       = FRC_URB2D(I,J) * LH_URB  + (1-FRC_URB2D(I,J)) * LH(I,J)            ![W/m/m]   
