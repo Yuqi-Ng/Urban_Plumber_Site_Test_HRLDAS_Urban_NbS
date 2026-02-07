@@ -219,7 +219,8 @@ contains
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, 1:num_road_layers, jms:jme ), INTENT(INOUT) :: TVGL_URB3D
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, 1:num_road_layers, jms:jme ), INTENT(INOUT) :: SMG_URB3D																																													  
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, 1:num_roof_layers, jms:jme ), INTENT(INOUT) :: SMR_URB3D
-
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: USNET_URB2D         ! ADDED BY YUQI HUANG
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: ULNET_URB2D
 
 ! state variable surface_driver <--> lsm <--> urban
 
@@ -387,8 +388,6 @@ contains
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: RL_UP_URB
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: RS_ABS_URB
      REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: GRDFLX_URB
-     REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: USNET_URB, USNET_RURAL       ! added by yuqi huang
-     REAL(kind=kind_noahmp),    DIMENSION( its:ite, jts:jte) :: ULNET_URB, ULNET_RURAL
 
      REAL(kind=kind_noahmp) :: SIGMA_SB,RL_UP_RURAL,RL_UP_TOT,RS_ABS_TOT,UMOM,VMOM
      REAL(kind=kind_noahmp) :: r1,r2,r3
@@ -402,8 +401,6 @@ contains
     DO I=ITS,ITE
       HFX_RURAL(I,J)                = HFX(I,J)
       QFX_RURAL(I,J)                = QFX(I,J)
-      USNET_RURAL(I,J)              = USNET(I,J)  ! ADDED BY YUQI HUANG
-      ULNET_RURAL(I,J)              = ULNET(I,J)
       GRDFLX_RURAL(I,J)             = GRDFLX(I,J)
       EMISS_RURAL(I,J)              = EMISS(I,J)
       TSK_RURAL(I,J)                = TSK(I,J)
@@ -488,7 +485,7 @@ ILOOP : DO I = its, ite
 
     DO K = 1,num_road_layers
       TGL_URB(K) = TGL_URB3D(I,K,J)
-	  TVGL_URB(K)= TVGL_URB3D(I,K,J) ! add by yuqi
+	    TVGL_URB(K)= TVGL_URB3D(I,K,J) ! add by yuqi
       SMG_URB(K) = SMG_URB3D(I,K,J)  																 
     END DO
 
