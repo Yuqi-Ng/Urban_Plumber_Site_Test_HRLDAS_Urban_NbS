@@ -3183,7 +3183,7 @@ ENDIF
          read(string(indx+1:),*) htree_tbl(1:icate)
       else if (name == "DTREE") then
          read(string(indx+1:),*) dtree_tbl(1:icate)
-      else if (name == "ALBVG_TREE") then                           ! modified by yuqi
+      else if (name == "ALBVG") then                           ! modified by yuqi
          read(string(indx+1:),*) albvg_tbl(1:icate) 
       else if (name == "ALBT") then
          read(string(indx+1:),*) albt_tbl(1:icate) 
