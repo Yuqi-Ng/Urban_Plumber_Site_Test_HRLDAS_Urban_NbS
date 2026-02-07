@@ -325,7 +325,7 @@ use Machine, only : kind_noahmp
                     XXXR, XXXB, XXXG, XXXC,                           & ! H
                     TS,QS,SH,LH,LH_KINEMATIC,                         & ! O
                     SW,ALB,LW,G,RN,PSIM,PSIH,                         & ! O
-                    USNET, SLNET,                                     & ! O  ! s=added by yuqi huang
+                    USNET, ULNET,                                     & ! O  ! s=added by yuqi huang
                     GZ1OZ0,                                           & ! O
                     CMR_URB,CHR_URB,CMC_URB,CHC_URB,                  & ! I/O
                     U10,V10,TH2,Q2,UST,mh_urb,stdh_urb,lf_urb,        & ! O 
@@ -622,7 +622,7 @@ use Machine, only : kind_noahmp
    REAL(kind=kind_noahmp) :: SX, SD, SQ, RX
    REAL(kind=kind_noahmp) :: UR, ZC, XLB, BB
    REAL(kind=kind_noahmp) :: Z, RIBB, RIBG, RIBC, BHR, BHB, BHG, BHC
-   REAL(kind=kind_noahmp) :: TSC, FLXUV, THG, FLXTH, FLXHUM, FLXG       ! added by yuqi huang
+   REAL(kind=kind_noahmp) :: TSC, FLXUV, LNET, SNET, THG, FLXTH, FLXHUM, FLXG       ! added by yuqi huang
    REAL(kind=kind_noahmp) :: W, VFGS, VFGW, VFWG, VFWS, VFWW
    REAL(kind=kind_noahmp) :: HOUI1, HOUI2, HOUI3, HOUI4, HOUI5, HOUI6, HOUI7, HOUI8
    REAL(kind=kind_noahmp) :: SLX, SLX1, SLX2, SLX3, SLX4, SLX5, SLX6, SLX7, SLX8
