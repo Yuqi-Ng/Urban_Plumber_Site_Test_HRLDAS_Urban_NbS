@@ -736,7 +736,7 @@ use Machine, only : kind_noahmp
                    AH,CAPR,CAPB,CAPG,AKSR,AKSB,AKSG,ALBR,ALBB,    &
                    ALBG,EPSR,EPSB,EPSG,Z0R,Z0B,Z0G,Z0HB,Z0HG,     &
                    BETR,BETB,BETG,TRLEND,TBLEND,TGLEND,           &
-                   RTREE,RTREE_M,RW_M,HTREE,DTREE,ALBVG,ALBT      &        ! modified by yuqi comment out LAI_TREE,LAI_VEG
+                   RTREE,RTREE_M,RW_M,HTREE,DTREE,ALBVG,ALBT,     &        ! modified by yuqi comment out LAI_TREE,LAI_VEG
                    Z0VG,Z0HVG,CAPVG,EPSVG,EPST,FVG,               &        ! added by yuqi																						  
 !for BEP
                    NUMDIR, STREET_DIRECTION, STREET_WIDTH,        & 
