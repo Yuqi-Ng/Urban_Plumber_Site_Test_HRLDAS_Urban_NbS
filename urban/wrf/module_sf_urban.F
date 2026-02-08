@@ -325,7 +325,7 @@ use Machine, only : kind_noahmp
                     XXXR, XXXB, XXXG, XXXC,                           & ! H
                     TS,QS,SH,LH,LH_KINEMATIC,                         & ! O
                     SW,ALB,LW,G,RN,PSIM,PSIH,                         & ! O
-                    USNET, ULNET,                                     & ! O  ! s=added by yuqi huang
+                    USNET, ULNET,                                     & ! O  ! added by yuqi huang
                     GZ1OZ0,                                           & ! O
                     CMR_URB,CHR_URB,CMC_URB,CHC_URB,                  & ! I/O
                     U10,V10,TH2,Q2,UST,mh_urb,stdh_urb,lf_urb,        & ! O 

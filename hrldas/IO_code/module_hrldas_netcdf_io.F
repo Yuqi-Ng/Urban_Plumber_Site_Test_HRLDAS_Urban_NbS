@@ -3318,13 +3318,28 @@ contains
   subroutine add_to_output_2d_float_mpp ( array, name, description, units )
     implicit none
     real(kind=kind_noahmp), dimension(:,:), intent(in) :: array
-    real(kind=kind_noahmp), dimension(global_nx,global_ny) :: garray
+    real(kind=kind_noahmp), allocatable, save :: garray(:,:)
     character(len=*), intent(in) :: name, description, units
-    call write_io_real(array,garray)
-    if(my_id .eq. io_id) then
-         call add_to_output_2d_float( garray, name, description, units )
-    endif
+
+    if ( size(array,1) == 0 .or. size(array,2) == 0 ) then
+      !if (my_id == io_id) then
+       !   write(*,'(A,1X,A)')  'FATAL: add_to_output_2d_float_mpp got empty array for', trim(name)
+        !  write(*,'(A,4I10)')  '       lbound/ubound =', lbound(array,1), ubound(array,1), lbound(array,2), ubound(array,2)
+        !  write(*,'(A,2I10)')  '       size         =', size(array,1), size(array,2)
+      !end if
+      return
+    end if
+
+    if (.not. allocated(garray)) allocate(garray(global_nx, global_ny))
+
+    call write_io_real(array, garray)
+
+    if (my_id .eq. io_id) then
+      call add_to_output_2d_float( garray, name, description, units )
+    end if
+
   end subroutine add_to_output_2d_float_mpp
+
 
   subroutine add_to_output_2d_integer_mpp ( array, name, description, units )
     implicit none

@@ -493,7 +493,7 @@ contains
           if ( .not. allocated (NoahmpIO%dzb)          ) allocate ( NoahmpIO%dzb           (            1:NSOIL            ) )
           if ( .not. allocated (NoahmpIO%dzg)          ) allocate ( NoahmpIO%dzg           (            1:NSOIL            ) )
           ! new urban variables for urban nbs (yuqi)
-	    if ( .not. allocated (NoahmpIO%cmcg_urb2d)    ) allocate ( NoahmpIO%cmcg_urb2d     (XSTART:XEND,        YSTART:YEND) )
+	       if ( .not. allocated (NoahmpIO%cmcg_urb2d)    ) allocate ( NoahmpIO%cmcg_urb2d     (XSTART:XEND,        YSTART:YEND) )
           if ( .not. allocated (NoahmpIO%tvg_urb2d)     ) allocate ( NoahmpIO%tvg_urb2d      (XSTART:XEND,        YSTART:YEND) )
           if ( .not. allocated (NoahmpIO%tt_urb2d)      ) allocate ( NoahmpIO%tt_urb2d       (XSTART:XEND,        YSTART:YEND) )
           if ( .not. allocated (NoahmpIO%xxxvg_urb2d)   ) allocate ( NoahmpIO%xxxvg_urb2d    (XSTART:XEND,        YSTART:YEND) )

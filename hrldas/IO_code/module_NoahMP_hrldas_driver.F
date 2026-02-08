@@ -1192,7 +1192,7 @@ contains
               call add_to_output(NoahmpIO%GRDFLX     , "GRDFLX"  , "Heat flux into the soil"              , "W/m2"                  )
               call add_to_output(NoahmpIO%HFX        , "HFX"     , "Total sensible heat to atmosphere"    , "W/m2"                  )
               call add_to_output(NoahmpIO%LH         , "LH"      , "Total latent heat to atmosphere"      , "W/m2"                  )
-              call add_to_output(NoahmpIO%USNET      , "USNET"   , "Urban grid net shortwave radiation"   , "W/m2"                  )
+              call add_to_output(NoahmpIO%USNET      , "USNET"   , "Urban grid net shortwave radiation"   , "W/m2"                  )       ! added by yuqi
               call add_to_output(NoahmpIO%ULNET      , "ULNET"   , "Urban grid net longwave radiation"    , "W/m2"                  )
               call add_to_output(NoahmpIO%ECANXY     , "ECAN"    , "Canopy water evaporation rate"        , "mm/s"                  )
               call add_to_output(NoahmpIO%ETRANXY    , "ETRAN"   , "Transpiration rate"                   , "mm/s"                  )
