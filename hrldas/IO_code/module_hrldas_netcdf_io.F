@@ -3322,11 +3322,6 @@ contains
     character(len=*), intent(in) :: name, description, units
 
     if ( size(array,1) == 0 .or. size(array,2) == 0 ) then
-      !if (my_id == io_id) then
-       !   write(*,'(A,1X,A)')  'FATAL: add_to_output_2d_float_mpp got empty array for', trim(name)
-        !  write(*,'(A,4I10)')  '       lbound/ubound =', lbound(array,1), ubound(array,1), lbound(array,2), ubound(array,2)
-        !  write(*,'(A,2I10)')  '       size         =', size(array,1), size(array,2)
-      !end if
       return
     end if
 
