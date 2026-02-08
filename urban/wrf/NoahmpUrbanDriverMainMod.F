@@ -16,6 +16,7 @@ contains
                                 GLW,          P8W3D,         RAINBL,       DZ8W,      ZNT,  & ! IN : Forcing
                                 TSK,            HFX,            QFX,         LH,   GRDFLX,  & ! IN/OUT : LSM 
                               USNET,          ULNET,                                        & ! added by yuqi huang
+                              FSAXY,         FIRAXY,                                        & ! added by yuqi huang
                              ALBEDO,          EMISS,           QSFC,                        & ! IN/OUT : LSM 
                             ids,ide,        jds,jde,        kds,kde,                        &
                             ims,ime,        jms,jme,        kms,kme,                        &
@@ -221,6 +222,8 @@ contains
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, 1:num_roof_layers, jms:jme ), INTENT(INOUT) :: SMR_URB3D
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: USNET         ! ADDED BY YUQI HUANG
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: ULNET
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FSAXY
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FIRAXY
 
 ! state variable surface_driver <--> lsm <--> urban
 
@@ -475,6 +478,7 @@ ILOOP : DO I = its, ite
     XXXVG_URB   = XXXVG_URB2D(I,J)   
     USNET_URB   = USNET(I,J)
     ULNET_URB   = ULNET(I,J)
+
     DO K = 1,num_roof_layers
       TRL_URB(K) = TRL_URB3D(I,K,J)
       SMR_URB(K) = SMR_URB3D(I,K,J)
@@ -565,8 +569,10 @@ ILOOP : DO I = its, ite
 
     ALBEDO(I,J)   = FRC_URB2D(I,J) * ALB_URB + (1-FRC_URB2D(I,J)) * ALBEDO(I,J)        ![-]      
     HFX(I,J)      = FRC_URB2D(I,J) * SH_URB  + (1-FRC_URB2D(I,J)) * HFX(I,J)           ![W/m/m] 
-    USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * USNET(I,J)           ![W/m/m]  ADDED BY YUQI HUANG
-    ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * ULNET(I,J)           ![W/m/m] 
+    ! USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * ALBEDO(I,J) * SWDDIR(I,J)          ![W/m/m]  ADDED BY YUQI HUANG
+    ! ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * ULNET(I,J)           ![W/m/m] 
+    USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * FSAXY(I,J)            ![W/m/m]  ADDED BY YUQI HUANG
+    ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * FIRAXY(I,J)           ![W/m/m] 
     QFX(I,J)      = FRC_URB2D(I,J) * LH_KINEMATIC_URB &
                        + (1-FRC_URB2D(I,J))* QFX(I,J)                                  ![kg/m/m/s] 
     LH(I,J)       = FRC_URB2D(I,J) * LH_URB  + (1-FRC_URB2D(I,J)) * LH(I,J)            ![W/m/m]   
