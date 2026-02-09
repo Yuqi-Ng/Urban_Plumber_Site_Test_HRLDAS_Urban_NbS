@@ -13,10 +13,13 @@ contains
                                  DT,     COSZ_URB2D,     XLAT_URB2D,                        & ! IN : Time/Space-related
                                 T3D,           QV3D,          U_PHY,      V_PHY,   SWDOWN,  & ! IN : Forcing
                              SWDDIR,         SWDDIF,       LAI_TREE,    LAI_VEG,            & ! added by yuqi
+                             T2MVXY,         T2MBXY,         Q2MVXY,     Q2MBXY,            & ! added by yuqi
+                             FVEGXY,         FVEGXY,          SMOIS,       TSLB,            & ! added by yuqi
                                 GLW,          P8W3D,         RAINBL,       DZ8W,      ZNT,  & ! IN : Forcing
                                 TSK,            HFX,            QFX,         LH,   GRDFLX,  & ! IN/OUT : LSM 
                               USNET,          ULNET,                                        & ! added by yuqi huang
                               FSAXY,         FIRAXY,                                        & ! added by yuqi huang
+                                UT2,            UQ2,         USOILM,     USOILT,            & ! added by yuqi huang
                              ALBEDO,          EMISS,           QSFC,                        & ! IN/OUT : LSM 
                             ids,ide,        jds,jde,        kds,kde,                        &
                             ims,ime,        jms,jme,        kms,kme,                        &
@@ -224,6 +227,17 @@ contains
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: ULNET
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FSAXY
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FIRAXY
+
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: T2MVXY         ! ADDED BY YUQI HUANG
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: T2MBXY
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: Q2MVXY
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: Q2MBXY
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FVEGXY         ! ADDED BY YUQI HUANG
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FVEGXY
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime,num_road_layers, jms:jme ),    INTENT(INOUT) :: SMOIS
+     REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime,num_road_layers, jms:jme ),    INTENT(INOUT) :: TSLB
+
+
 
 ! state variable surface_driver <--> lsm <--> urban
 
@@ -569,10 +583,6 @@ ILOOP : DO I = its, ite
 
     ALBEDO(I,J)   = FRC_URB2D(I,J) * ALB_URB + (1-FRC_URB2D(I,J)) * ALBEDO(I,J)        ![-]      
     HFX(I,J)      = FRC_URB2D(I,J) * SH_URB  + (1-FRC_URB2D(I,J)) * HFX(I,J)           ![W/m/m] 
-    ! USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * ALBEDO(I,J) * SWDDIR(I,J)          ![W/m/m]  ADDED BY YUQI HUANG
-    ! ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * ULNET(I,J)           ![W/m/m] 
-    USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * FSAXY(I,J)            ![W/m/m]  ADDED BY YUQI HUANG
-    ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * FIRAXY(I,J)           ![W/m/m] 
     QFX(I,J)      = FRC_URB2D(I,J) * LH_KINEMATIC_URB &
                        + (1-FRC_URB2D(I,J))* QFX(I,J)                                  ![kg/m/m/s] 
     LH(I,J)       = FRC_URB2D(I,J) * LH_URB  + (1-FRC_URB2D(I,J)) * LH(I,J)            ![W/m/m]   
@@ -586,6 +596,16 @@ ILOOP : DO I = its, ite
 !    QSFC(I,J)     = Q1/(1.0-Q1)
                    QSFC(I,J)= FRC_URB2D(I,J)*QS_URB+(1-FRC_URB2D(I,J))*QSFC(I,J)               !!   QSFC(I,J)=QSFC1D
     UST(I,J)      = FRC_URB2D(I,J) * UST_URB + (1-FRC_URB2D(I,J)) * UST(I,J)     ![m/s]
+
+
+    ! newly added urban grid-level output by yuqi huang
+    USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * FSAXY(I,J)            ![W/m/m]  
+    ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * FIRAXY(I,J)           ![W/m/m] 
+    UT2(I,J)        = FRC_URB2D(I,J) * TH2_URB    + (1-FRC_URB2D(I,J)) * T2MVXY(I,J) * FVEGXY(I,J) + T2MBXY(I,J) * (1 - FVEGXY(I,J))
+    UQ2(I,J)        = FRC_URB2D(I,J) * Q2_URB     + (1-FRC_URB2D(I,J)) * Q2MVXY(I,J) * FVEGXY(I,J) + Q2MBXY(I,J) * (1 - FVEGXY(I,J))
+    USOILM(I,J)     = FRC_URB2D(I,J) * SMG_URB(1) + (1-FRC_URB2D(I,J)) * SMOIS(I,1,J)
+    USOILT(I,J)     = FRC_URB2D(I,J) * TVG_URB    + (1-FRC_URB2D(I,J)) * TSLB(I,1,J)
+
 
 ! Renew Urban State Variables
 

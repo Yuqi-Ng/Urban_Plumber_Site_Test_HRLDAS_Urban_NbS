@@ -127,6 +127,13 @@ contains
     if ( .not. allocated (NoahmpIO%HFX)      ) allocate ( NoahmpIO%HFX       (XSTART:XEND,        YSTART:YEND) ) ! sensible heat flux [W m-2]
     if ( .not. allocated (NoahmpIO%USNET)    ) allocate ( NoahmpIO%USNET     (XSTART:XEND,        YSTART:YEND) ) ! urban net shortwave radiation [W m-2]  ! added by yuqi huang
     if ( .not. allocated (NoahmpIO%ULNET)    ) allocate ( NoahmpIO%ULNET     (XSTART:XEND,        YSTART:YEND) ) ! urban net longwave radiation [W m-2]
+    if ( .not. allocated (NoahmpIO%UT2)     ) allocate ( NoahmpIO%UT2        (XSTART:XEND,        YSTART:YEND) ) ! urban 2m air temperature [oC] ! added by yuqi huang
+    if ( .not. allocated (NoahmpIO%UQ2)     ) allocate ( NoahmpIO%UQ2        (XSTART:XEND,        YSTART:YEND) ) ! urban specific humidity  [-]
+    if ( .not. allocated (NoahmpIO%USOILM)  ) allocate ( NoahmpIO%USOILM     (XSTART:XEND,        YSTART:YEND) ) ! urban soil moisture (1st layer) [oC] 
+    if ( .not. allocated (NoahmpIO%USOILT)  ) allocate ( NoahmpIO%USOILT     (XSTART:XEND,        YSTART:YEND) ) ! urban soil temperature (1st layer)  [-]
+
+
+    
     if ( .not. allocated (NoahmpIO%QFX)      ) allocate ( NoahmpIO%QFX       (XSTART:XEND,        YSTART:YEND) ) ! latent heat flux [kg s-1 m-2]
     if ( .not. allocated (NoahmpIO%LH)       ) allocate ( NoahmpIO%LH        (XSTART:XEND,        YSTART:YEND) ) ! latent heat flux [W m-2]
     if ( .not. allocated (NoahmpIO%GRDFLX)   ) allocate ( NoahmpIO%GRDFLX    (XSTART:XEND,        YSTART:YEND) ) ! ground/snow heat flux [W m-2]
@@ -661,6 +668,10 @@ contains
     NoahmpIO%HFX             = undefined_real
     NoahmpIO%USNET           = undefined_real  ! added by yuqi huang
     NoahmpIO%ULNET           = undefined_real
+    NoahmpIO%UT2             = undefined_real
+    NoahmpIO%UQ2             = undefined_real
+    NoahmpIO%USOILM          = undefined_real
+    NoahmpIO%USOILT          = undefined_real
     NoahmpIO%LH              = undefined_real
     NoahmpIO%EMISS           = undefined_real
     NoahmpIO%SNOWC           = undefined_real

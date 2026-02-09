@@ -165,8 +165,13 @@ module NoahmpIOVarType
     ! INOUT (with generic LSM equivalent) (as defined in WRF)
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  TSK                 ! surface radiative temperature [K]
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  HFX                 ! sensible heat flux [W m-2]
-    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  USNET               ! urban net short wave radiation [W m-2]
+    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  USNET               ! urban net short wave radiation [W m-2]  ! added by yuqi huang
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  ULNET               ! urban net long wave radiation [W m-2]
+    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  UT2                 ! urban 2m air temperature  [oC]  ! added by yuqi huang
+    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  UQ2                 ! urban specific humidity  [-]
+    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  USOILM              ! urban soil moisture (1st layer) [oC]  ! added by yuqi huang
+    real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  USOILT              ! urban soil temperature (1st layer)  [-]
+
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  QFX                 ! latent heat flux [kg s-1 m-2]
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  LH                  ! latent heat flux [W m-2]
     real(kind=kind_noahmp), allocatable, dimension(:,:)    ::  GRDFLX              ! ground/snow heat flux [W m-2]

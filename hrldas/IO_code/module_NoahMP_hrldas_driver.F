@@ -1060,10 +1060,13 @@ contains
                             NoahmpIO%ITIMESTEP, NoahmpIO%DTBL, NoahmpIO%COSZEN, NoahmpIO%XLAT,                  & ! IN : Time/Space-related
                             NoahmpIO%T_PHY, NoahmpIO%QV_CURR, NoahmpIO%U_PHY, NoahmpIO%V_PHY, NoahmpIO%SWDOWN,  & ! IN : Forcing
                             NoahmpIO%SWDDIR, NoahmpIO%SWDDIF, NoahmpIO%LAI_TREE, NoahmpIO%LAI_VEG,              & ! added by yuqi
+                            NoahmpIO%T2MVXY, NoahmpIO%T2MBXY, NoahmpIO%Q2MVXY, NoahmpIO%Q2MBXY,                 & ! added by yuqi huang
+                            NoahmpIO%FVEGXY, NoahmpIO%FVEGXY, NoahmpIO%SMOIS, NoahmpIO%TSLB,                    & ! added by yuqi huang
                             NoahmpIO%GLW, NoahmpIO%P8W, NoahmpIO%RAINBL, NoahmpIO%DZ8W, NoahmpIO%ZNT,           & ! IN : Forcing
                             NoahmpIO%TSK, NoahmpIO%HFX, NoahmpIO%QFX, NoahmpIO%LH, NoahmpIO%GRDFLX,             & ! IN/OUT : LSM 
                             NoahmpIO%USNET, NoahmpIO%ULNET,                                                     & ! ADDED BY YUQI HUANG
                             NoahmpIO%FSAXY,NoahmpIO%FIRAXY,                                                     & ! ADDED BY YUQI HUANG
+                            NoahmpIO%UT2,NoahmpIO%UQ2, NoahmpIO%USOILM,NoahmpIO%USOILT,                         & ! ADDED BY YUQI HUANG
                             NoahmpIO%ALBEDO, NoahmpIO%EMISS, NoahmpIO%QSFC,                                     & ! IN/OUT : LSM 
                             NoahmpIO%ids, NoahmpIO%ide, NoahmpIO%jds, NoahmpIO%jde, NoahmpIO%kds, NoahmpIO%kde, &
                             NoahmpIO%ims, NoahmpIO%ime, NoahmpIO%jms, NoahmpIO%jme, NoahmpIO%kms, NoahmpIO%kme, &
@@ -1197,6 +1200,12 @@ contains
               call add_to_output(NoahmpIO%ULNET      , "ULNET"   , "Urban grid net longwave radiation"    , "W/m2"                  )
               call add_to_output(NoahmpIO%ECANXY     , "ECAN"    , "Canopy water evaporation rate"        , "mm/s"                  )
               call add_to_output(NoahmpIO%ETRANXY    , "ETRAN"   , "Transpiration rate"                   , "mm/s"                  )
+
+              call add_to_output(NoahmpIO%UT2        , "UT2"     , "Urban 2m air temperature"             , "oC"                    )       ! added by yuqi
+              call add_to_output(NoahmpIO%UQ2        , "UQ2"     , "Urban specific humidity"              , "-"                     )
+              call add_to_output(NoahmpIO%USOILM     , "USOILM"  , "urban 1st layer soil moisture"        , "-"                     )
+              call add_to_output(NoahmpIO%USOILT     , "USOILT"  , "urban 1st layer soil temperature"     , "oC"                    )
+
               call add_to_output(NoahmpIO%EDIRXY     , "EDIR"    , "Direct from soil evaporation rate"    , "mm/s"                  )
               call add_to_output(NoahmpIO%ALBEDO     , "ALBEDO"  , "Surface albedo"                       , "-"                     )
             ! Grid water budget terms - in addition to above
