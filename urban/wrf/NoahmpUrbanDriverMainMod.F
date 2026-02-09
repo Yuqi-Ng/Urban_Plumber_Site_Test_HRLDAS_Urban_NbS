@@ -14,7 +14,7 @@ contains
                                 T3D,           QV3D,          U_PHY,      V_PHY,   SWDOWN,  & ! IN : Forcing
                              SWDDIR,         SWDDIF,       LAI_TREE,    LAI_VEG,            & ! added by yuqi
                              T2MVXY,         T2MBXY,         Q2MVXY,     Q2MBXY,            & ! added by yuqi
-                             FVEGXY,          SMOIS,       TSLB,                            & ! added by yuqi
+                             FVEGXY,          SMOIS,       TSLB,                                        & ! added by yuqi
                                 GLW,          P8W3D,         RAINBL,       DZ8W,      ZNT,  & ! IN : Forcing
                                 TSK,            HFX,            QFX,         LH,   GRDFLX,  & ! IN/OUT : LSM 
                               USNET,          ULNET,                                        & ! added by yuqi huang
@@ -227,12 +227,10 @@ contains
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: ULNET
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FSAXY
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: FIRAXY
-
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: UT2         ! ADDED BY YUQI HUANG
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: UQ2
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: USOILM
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: USOILT
-
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: T2MVXY         ! ADDED BY YUQI HUANG
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: T2MBXY
      REAL(kind=kind_noahmp), OPTIONAL, DIMENSION( ims:ime, jms:jme ),                    INTENT(INOUT) :: Q2MVXY
