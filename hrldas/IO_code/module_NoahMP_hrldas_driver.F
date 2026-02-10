@@ -1061,7 +1061,7 @@ contains
                             NoahmpIO%T_PHY, NoahmpIO%QV_CURR, NoahmpIO%U_PHY, NoahmpIO%V_PHY, NoahmpIO%SWDOWN,  & ! IN : Forcing
                             NoahmpIO%SWDDIR, NoahmpIO%SWDDIF, NoahmpIO%LAI_TREE, NoahmpIO%LAI_VEG,              & ! added by yuqi
                             NoahmpIO%T2MVXY, NoahmpIO%T2MBXY, NoahmpIO%Q2MVXY, NoahmpIO%Q2MBXY,                 & ! added by yuqi huang
-                            NoahmpIO%FVEGXY, NoahmpIO%SMOIS, NoahmpIO%TSLB,                         & ! added by yuqi huang
+                            NoahmpIO%FVEGXY, NoahmpIO%SMOIS, NoahmpIO%TSLB,                                     & ! added by yuqi huang
                             NoahmpIO%GLW, NoahmpIO%P8W, NoahmpIO%RAINBL, NoahmpIO%DZ8W, NoahmpIO%ZNT,           & ! IN : Forcing
                             NoahmpIO%TSK, NoahmpIO%HFX, NoahmpIO%QFX, NoahmpIO%LH, NoahmpIO%GRDFLX,             & ! IN/OUT : LSM 
                             NoahmpIO%USNET, NoahmpIO%ULNET,                                                     & ! ADDED BY YUQI HUANG
