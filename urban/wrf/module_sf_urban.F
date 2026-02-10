@@ -2270,7 +2270,7 @@ ENDIF
    QST = -FLXHUM/UST              ! q* [-]
 
    USNET = SNET*697.7*60.         ! urban net shortwave radiation added by yuqi huang  [W/m/m]
-   ULNET = LNET*697.7*60.         ! urban net shortwave radiation added by yuqi huang  [W/m/m]
+   ULNET = -LNET*697.7*60.         ! urban net shortwave radiation added by yuqi huang  [W/m/m]
 !------------------------------------------------------
 !  diagnostic GRID AVERAGED  PSIM  PSIH  TS QS --> WRF
 !------------------------------------------------------
