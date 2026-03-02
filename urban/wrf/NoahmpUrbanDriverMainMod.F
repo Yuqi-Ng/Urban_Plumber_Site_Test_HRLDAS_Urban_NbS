@@ -603,8 +603,8 @@ ILOOP : DO I = its, ite
     ! newly added urban grid-level output by yuqi huang
     USNET(I,J)      = FRC_URB2D(I,J) * USNET_URB  + (1-FRC_URB2D(I,J)) * FSAXY(I,J)            ![W/m/m]  
     ULNET(I,J)      = FRC_URB2D(I,J) * ULNET_URB  + (1-FRC_URB2D(I,J)) * FIRAXY(I,J)           ![W/m/m] 
-    UT2(I,J)        = FRC_URB2D(I,J) * TH2_URB    + (1-FRC_URB2D(I,J)) * T2MVXY(I,J) * FVEGXY(I,J) + T2MBXY(I,J) * (1 - FVEGXY(I,J))
-    UQ2(I,J)        = FRC_URB2D(I,J) * Q2_URB     + (1-FRC_URB2D(I,J)) * Q2MVXY(I,J) * FVEGXY(I,J) + Q2MBXY(I,J) * (1 - FVEGXY(I,J))
+    UT2(I,J)        = FRC_URB2D(I,J) * TH2_URB    + (1-FRC_URB2D(I,J)) * (T2MVXY(I,J) * FVEGXY(I,J) + T2MBXY(I,J) * (1 - FVEGXY(I,J)))
+    UQ2(I,J)        = FRC_URB2D(I,J) * Q2_URB     + (1-FRC_URB2D(I,J)) * (Q2MVXY(I,J) * FVEGXY(I,J) + Q2MBXY(I,J) * (1 - FVEGXY(I,J)))
     USOILM(I,J)     = FRC_URB2D(I,J) * SMG_URB(1) + (1-FRC_URB2D(I,J)) * SMOIS(I,1,J)
     USOILT(I,J)     = FRC_URB2D(I,J) * TVG_URB    + (1-FRC_URB2D(I,J)) * TSLB(I,1,J)
 
