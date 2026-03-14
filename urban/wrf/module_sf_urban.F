@@ -1915,7 +1915,7 @@ ENDIF
          ALPHAT = (RHO * CP * 100) / (1.274 * RA_LEAF)
          HT = ALPHAT * (TTP - TCP)
         
-         HT_test = HT/(1/697.7/60.)
+         !HT_test = HT/(1/697.7/60.)
          !print*, 'updated ELET and HT in W/m2 is', ELET, HT_test														
 
          ! ALPHAT =  (RHO*CP*100.)/(1.27*RA_LEAF) ! unit [cal/cm2/s/K] ([g/cm3] * [cal/g/K] / [s/m] * [m/cm]) % commented out, no longer used for residual approach (Chenghao Wang)
