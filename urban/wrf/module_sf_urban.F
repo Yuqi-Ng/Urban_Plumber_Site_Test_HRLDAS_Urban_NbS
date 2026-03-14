@@ -713,8 +713,9 @@ use Machine, only : kind_noahmp
    integer,parameter ::  IMPR  = 1     
    integer,parameter ::  IMPB  = 2      
    integer,parameter ::  IMPG  = 3    
-
-!-------------------------------------------------------------------------------
+   REAL(kind=kind_noahmp) :: W2_num,W2_den,den_qc
+\
+   !-------------------------------------------------------------------------------
 ! Set parameters
 !-------------------------------------------------------------------------------
 
@@ -968,7 +969,7 @@ use Machine, only : kind_noahmp
 
    ! ===Yuqi Huang, 2024/07, urban tree & vegetation variables for UCM based on ASLUM
    TVGP   = TVG
-   TGEP   = TGE
+   TGEP   = TG
    CMCGP  = CMCG
    SMGP   = SMG 
    TTP    = TT
@@ -1001,7 +1002,12 @@ use Machine, only : kind_noahmp
    SHADOW = .true.
 !   SHADOW = .false.
 ! SHADOW has not been activated in previous versions of SLUCM (chenghao) - it's not turned on
+   TAU = EXP(-0.61 * LAI_TREE)
 
+   IF (TREEOPTION .eq. 1 ) THEN
+      CALL VF_TREE_ANALYTICAL(RW, HGT, HTREE, RTREE, TAU, VFGS_TREE, VFGW_TREE, VFGT_TREE, VFWS_TREE, VFWG_TREE, VFWW_TREE, VFWT_TREE, VFTS_TREE, VFTG_TREE, VFTW_TREE)
+   END IF
+   
    IF (SSG > 0.0) THEN
      IF(SHADOW) THEN              ! shadow effects, calculate SLX
        FAI=XLAT*PI/180.
@@ -1086,11 +1092,9 @@ use Machine, only : kind_noahmp
          SDT = SD * (2. * RTREE * SQRT(1. + XI**2.))/(2. * PI * RTREE)
        END IF
        
-       TAU = EXP(-0.61 * LAI_TREE)
        
        CALL SHADOW_TREE(XI, HGT, RW, HTREE, RTREE, DTREE, CHI_SHADED, ETA_SHADED, CHI_SHADED_TREE, ETA_SHADED_TREE)
-       CALL VF_TREE_ANALYTICAL(RW, HGT, HTREE, RTREE, TAU, VFGS_TREE, VFGW_TREE, VFGT_TREE, VFWS_TREE, VFWG_TREE, VFWW_TREE, VFWT_TREE, VFTS_TREE, VFTG_TREE, VFTW_TREE)
-       
+
 
        SDG = SD * (RW - CHI_SHADED + CHI_SHADED_TREE * TAU)/RW 
        SDB = SD * XI * (HGT - ETA_SHADED +ETA_SHADED_TREE * TAU)/W
@@ -1699,7 +1703,28 @@ ENDIF
          ZSOILG (KZ) = - DZVG(KZ) + ZSOILG (KZ -1)
       END DO
 
-      TTP = TCP
+      ! Option1: residual approach
+      ! TTP = TCP 
+
+      ! Option2:  resistance approach
+      TTP = TT   
+
+      ES=6.11*EXP( (2.5*10**6/461.51)*(TTP-273.15)/(273.15*TTP) )        
+      QS0T=0.622*ES/(PS-0.378*ES)   
+      RA_LEAF = 58 * (LAI_TREE**0.56) * SQRT(DLEAF/UC)          ! DLEAF = 0.1 (YUQI)  
+      !W2 = 0.5 * (SMG(NVG/2-1) + SMG(NVG/2))   
+
+      W2_num = 0.0
+      W2_den = 0.0
+      DO K = 1, 3
+         W2_num = W2_num + SMG(K) * DZVG(K)
+         W2_den = W2_den + DZVG(K)
+      END DO
+      W2 = W2_num / W2_den
+
+      CALL STOMATAL(RS_LEAF, RSMIN, SLEAF, LAI_TREE, W2, SMCWLT, SMCMAX, TCP, TTP, QCP, QS0T) ! change SMCREF to SMCWLT in STOMATAL function
+      print*, 'W2 and RS_LEAF is ', W2, RS_LEAF
+									   
       DO ITERATION=1,100
          ! print* , 'Current iteration:', ITERATION
          KZ=1     
@@ -1709,6 +1734,8 @@ ENDIF
          DQS0VGDTVG = DESDT*0.622*PS/((PS-0.378*ES)**2) 
          EPVG=RHOO*CHVG*UC*(QS0VG-QCP)
 
+         SMGP = MAX(SMGP, SMCWLT) !added by yuqi
+         SMGP = MIN(SMGP, SMCMAX)					 
 
          VFAC = 1.0 - EXP(-0.52 * LAI_VEG)           ! following PhenologyMainMod.F90 in Noah_MP (yuqi) 
          IF (EPVG > 0.0) THEN 
@@ -1729,6 +1756,9 @@ ENDIF
          END IF
          ! print*, 'Vegetated soil moisture=', SMG ! add by yuqi for testing purpose
 
+
+         SMG = MAX(SMG, SMCWLT) !added by yuqi
+         SMG = MIN(SMG, SMCMAX)
          EDIRG = EDIRG  * 1000
          ETTG  = ETTG   * 1000
          ECG   = ECG    * 1000
@@ -1757,7 +1787,6 @@ ENDIF
 
 
          EPSGE   = (1 - FVG) * EPSG + FVG * EPSVG
-         TGEP    = (1 - FVG) * TGP  + FVG * TVGP 
          
 	      
          EMITW = EPSB * SIG * TBP**4./60
@@ -1860,9 +1889,7 @@ ENDIF
          ELEB=RHO*EL*CHB*UC*BETB*(QS0B-QCP)*100   ! Note: unit [cal/cm2/s]
          ELEG=RHO*EL*CHG*UC*BETG*(QS0G-QCP)*100   ! Note: unit [cal/cm2/s]
 
-         RA_LEAF = 58 * (LAI_TREE**0.56) * SQRT(DLEAF/UC)          ! DLEAF = 0.1 (YUQI)  
-         W2 = 0.5 * (SMGP(NVG/2-1) + SMGP(NVG/2))                  
-         CALL STOMATAL(RS_LEAF, RSMIN, SLEAF, LAI_TREE, W2, SMCREF, SMCMAX, TCP, TT, QCP, QS0T) 
+
          CALL LELEAF(ELET, SLEAF, RLEAF, RA_LEAF, RS_LEAF, RHOO, TCP, QCP, QS0T)
 
          AVAILABLE_WATER_SUM = 0.0
@@ -1881,8 +1908,15 @@ ENDIF
          CALL ROOT_UPTAKE(SROOT, NVG, SMG, SMCMAX, SMCDRY, RTREE_M, LAI_TREE, DZVG, ZSOILG, ELET, FVG, RW_M)   ! SROOT unit: m/s (Yuqi)
 
      
-         ! residual approach (Yuqi)    
-         HT = (SLEAF + RLEAF - ELET - (TT - TTP)/DELT*640) * (1/697.7/60.)      ! following e.q 28 in (Ryu, 2016), unit same as HB, HG in [cal/cm2/s]
+         ! Option1: residual approach (Yuqi)  
+         ! HT = (SLEAF + RLEAF - ELET - (ABS(TT - TTP)/DELT)*640) * (1/697.7/60.)      ! following e.q 28 in (Ryu, 2016), unit same as HB, HG in [cal/cm2/s], change from 640 to 700
+                  
+         ! Option2: resistance approach (Yuqi) 
+         ALPHAT = (RHO * CP * 100) / (1.274 * RA_LEAF)
+         HT = ALPHAT * (TTP - TCP)
+        
+         HT_test = HT/(1/697.7/60.)
+         !print*, 'updated ELET and HT in W/m2 is', ELET, HT_test														
 
          ! ALPHAT =  (RHO*CP*100.)/(1.27*RA_LEAF) ! unit [cal/cm2/s/K] ([g/cm3] * [cal/g/K] / [s/m] * [m/cm]) % commented out, no longer used for residual approach (Chenghao Wang)
          DTCDTB = (W  * ALPHAB)/(RW * ALPHAC + RW * FVG * ALPHAVG + RW * (1 - FVG) * ALPHAG + W * ALPHAB) 
@@ -1902,11 +1936,13 @@ ENDIF
          DHVGDTVG=RHO*CP*CHVG*UC*(1-DTCDTVG)*100
 
 
-         DQCDTB=W*ALPHAB*BETB*DQS0BDTB/(W * ALPHAB * BETB + RW * (1 - FVG) * ALPHAG * BETG + RW * ALPHAC) 
-         DQCDTG=RW * (1 - FVG) * ALPHAG * BETG * DQS0GDTG/(W * ALPHAB * BETB + RW * (1 - FVG) * ALPHAG * BETG + RW * ALPHAC) 
-         ! DQCDTVG=0 ! no QS0VG in QC2
-		   DQCDTVG=RW * FVG * ALPHAVG * BETVG * DQS0VGDTVG/(W * ALPHAB * BETB + RW * (1 - FVG) * ALPHAG * BETG + RW * ALPHAC)
-
+         den_qc = W * ALPHAB * BETB + RW * (1 - FVG) * ALPHAG * BETG + RW * FVG * ALPHAVG * BETVG + RW * ALPHAC
+         DQCDTB=W*ALPHAB*BETB*DQS0BDTB/den_qc 
+         DQCDTG=RW * (1 - FVG) * ALPHAG * BETG * DQS0GDTG/den_qc
+         !DQCDTVG=0 ! no QS0VG in QC2
+		   DQCDTVG=RW * FVG * ALPHAVG * BETVG * DQS0VGDTVG/den_qc
+		   
+		   
          DELEBDTB=RHO*EL*CHB*UC*BETB*(DQS0BDTB-DQCDTB)*100
          DELEBDTG=RHO*EL*CHB*UC*BETB*(0-DQCDTG)*100
          DELEBDTVG=RHO*EL*CHB*UC*BETB*(0-DQCDTVG)*100
@@ -1925,7 +1961,7 @@ ENDIF
          G0G=AKSG*(TGP-TGL(1))/(DZG(1)/2)
 
          CALL TDFCND (KVG,SMG(KZ), QUARTZ, SMCMAX )
-         KVG = KVG * EXP(-2.0 * VFAC)  
+         !KVG = KVG * EXP(-2.0 * VFAC)  
          G0VG= KVG * (TVGP-TVGL(1))/(DZVG(1)/2.)/697.7/60   ! unit: cal/cm2/s (Yuqi)
 
          DG0BDTB = 2 * AKSB/DZB(1)
@@ -1994,11 +2030,12 @@ ENDIF
          TB = TBP + DTB
          TG = TGP + DTG
          TVG= TVGP+DTVG
+		 TGE    = (1 - FVG) * TG  + FVG * TVG								  
 
          TBP = TB
          TGP = TG
          TVGP= TVG
-         
+         TGEP=TGE
          ! After updating the temperatures (e.g., TBP = TB)   (yuqi)
          TBP = MAX(223.15, MIN(353.15, TBP)) !-50C to +80C
          TGP = MAX(223.15, MIN(353.15, TGP))
@@ -2034,7 +2071,8 @@ ENDIF
             WRITE_MESSAGE(WARN_MSG)
          END IF
 
-         TT = TC     ! update TT (yuqi)
+         ! TT = TC     !  residual approach update TT (yuqi)
+         TT = TTP + 0.2 * (TC - TTP)  ! resistance approach update TT (yuqi)
          DTC = TCP - TC
          TCP = TC    ! update TCP  (yuqi)
          QCP = QC
@@ -2068,7 +2106,7 @@ ENDIF
 
       CALL multi_layer(num_wall_layers,BOUNDB,G0B,CAPB,AKSB,TBL,DZB,DELT,TBLEND)
       CALL multi_layer(num_road_layers,BOUNDG,G0G,CAPG,AKSG,TGL,DZG,DELT,TGLEND)
-      ! CALL multi_layer(num_road_layers,BOUNDG,G0VG,CAPVG,KVG,TVGL,DZVG*0.01,DELT,TGLEND) ! DZVG unit ([m] as input, needed to convert to[cm]) (Chenghao 2026/01/20)
+      ! CALL multi_layer(num_road_layers,BOUNDG,G0VG,CAPVG,KVG/697.7/60,TVGL,DZVG*0.01,DELT,TGLEND) ! DZVG unit ([m] as input, needed to convert to[cm]) (Chenghao 2026/01/20)
 	   CALL SHFLX (SSOILG,TVGL,SMG,SMCMAX,NVG,TVGP,DELT,YY,ZZ1,ZSOILG,TGLEND,ZBOT,SMCWLT,KVG,QUARTZ,CSOIL,CAPVG)   ! Update temperature in vegetated ground soil layer (yuqi)
       ! print*, 'TVGL=', TVGL   ! add by yuqi for testing purpose 
 
@@ -5101,7 +5139,7 @@ SUBROUTINE SFCDIF_URB (ZLM,Z0,THZ0,THLM,SFCSPD,AKANDA,AKMS,AKHS,RLMO,CD)
       FE = 1/(1 + HS * (QSAT - QA))
       FE = MAX(FE, 0.01)
 
-      FT = 1 - 0.0016 * (298 - Ta)**2
+      FT = 1 - 0.0016 * (298 - TA)**2
       FT = MAX(FT, 0.0001)
 
       RS = RSMIN/LAI/FSR/F_THETA/FE/FT
