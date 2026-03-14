@@ -1723,7 +1723,7 @@ ENDIF
       W2 = W2_num / W2_den
 
       CALL STOMATAL(RS_LEAF, RSMIN, SLEAF, LAI_TREE, W2, SMCWLT, SMCMAX, TCP, TTP, QCP, QS0T) ! change SMCREF to SMCWLT in STOMATAL function
-      print*, 'W2 and RS_LEAF is ', W2, RS_LEAF
+      !print*, 'W2 and RS_LEAF is ', W2, RS_LEAF
 									   
       DO ITERATION=1,100
          ! print* , 'Current iteration:', ITERATION

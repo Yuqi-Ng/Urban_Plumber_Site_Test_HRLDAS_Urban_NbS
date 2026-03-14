@@ -2719,7 +2719,7 @@ contains
     logical,           intent(in)  :: update_veg, update_lai  ! Barlage v3.7: for veg read control
     real(kind=kind_noahmp), dimension(xstart:xend,ystart:yend), intent(out) :: t, q, u, v, p, lw, sw, pcp, snow, vegfra, lai, raddir, radvis, lai_tree, lai_veg ! added by yuqi
     
-    write(*,*) "DBG copyfrom_inputstruct: x=",xstart,xend," y=",ystart,yend
+    !write(*,*) "DBG copyfrom_inputstruct: x=",xstart,xend," y=",ystart,yend
 
     if (.not. associated(instruct%t))      stop "SIGSEGV root: instruct%t not associated"
     if (.not. associated(instruct%q))      stop "SIGSEGV root: instruct%q not associated"
