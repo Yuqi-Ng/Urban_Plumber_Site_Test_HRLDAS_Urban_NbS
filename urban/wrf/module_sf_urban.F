@@ -692,10 +692,10 @@ use Machine, only : kind_noahmp
    real(kind=kind_noahmp),parameter  :: EPSV     = 0.93   ! green roof emissivity
    real(kind=kind_noahmp),parameter  :: LAI      = 1.50   ! leaf area index on green roof
    real(kind=kind_noahmp),parameter  :: CMCMAX   = 0.5E-3 ! Maximum canopy interception capacity   
-   real(kind=kind_noahmp),parameter  :: SMCREF   = 0.329  ! Reference soil moisture
-   real(kind=kind_noahmp),parameter  :: SMCDRY   = 0.066  ! Residual  soil moisture
-   real(kind=kind_noahmp),parameter  :: SMCWLT   = 0.084  ! Wilting point        
-   real(kind=kind_noahmp),parameter  :: SMCMAX   = 0.439  ! Saturated soil moisture
+   real(kind=kind_noahmp),parameter  :: SMCREF   = 0.249  ! Reference soil moisture
+   real(kind=kind_noahmp),parameter  :: SMCDRY   = 0.041  ! Residual  soil moisture
+   real(kind=kind_noahmp),parameter  :: SMCWLT   = 0.095  ! Wilting point        
+   real(kind=kind_noahmp),parameter  :: SMCMAX   = 0.435  ! Saturated soil moisture
    real(kind=kind_noahmp),parameter  :: RSMAX    = 5000   ! Maximum stomatal resistance
    real(kind=kind_noahmp),parameter  :: RSMIN    = 100    ! Minimum stomatal resistance
    real(kind=kind_noahmp),parameter  :: RGL      = 100    ! Radiation limit where photosynthesis begins
